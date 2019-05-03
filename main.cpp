@@ -2,12 +2,11 @@
 #include <iostream>
 #include "quaternion.hpp"
 #include <cmath>
+#include "test.hpp"
 
 
 
 int main() {
-    quaternion<int> q{1, 2, 3, 4};
-    quaternion<int> a;
-    a = q;
+    TestFunction();
     return 0;
 }

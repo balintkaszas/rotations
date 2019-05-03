@@ -4,12 +4,12 @@
 #include <cmath>
 #include <sstream>
 #include <string>
-#include "matrix.hpp"
+#include "quaternion.hpp"
 
 template<typename T>
- bool areEqual(const std::vector<T> &reference, const  matrix<T> & m, const double precision = 1e-10) {
+ bool areEqual(const std::vector<T> &reference, const  quaternion<T> & q, const double precision = 1e-10) {
     
-    return (m.size() == static_cast<int>( reference.size() )) and std::equal (m.cbegin(), m.cend(), reference.cbegin(), [=](const auto x, const auto y){return std::abs(x - y) < precision;}) ;
+    return (q.isValid() and std::equal (q.cbegin(), q.cend(), reference.cbegin(), [=](const auto x, const auto y){return std::abs(x - y) < precision;})) ;
 }  
 
  
@@ -18,13 +18,24 @@ void TestFunction() {
     int numErrors = 0;
     //Default constructor
     {
-        matrix<int> m;
-        if( m.size() != 0 or m.dimension() != 0 or m.begin() != m.end()) {
+        quaternion<int> q;
+        if( !q.isValid() ){
             numErrors++;
             std::cout << "Default constructor failed \n";
         }
+        if( q.x() != 0 or q.y() != 0 or q.z() != 0 or q.w() != 0 ){
+            numErrors++;
+            std::cout << "Default constructor failed2 \n";
+        }
+        
+    }
+    // vector constructor
+    {
+
     }
 
+}
+/*
     // init. list constructor, indexing and iterators
     // if iterators tests are passed, areEqual() function is enough 
     {
@@ -410,4 +421,4 @@ void TestFunction() {
         }
 	}
     std::cout << "Number of errors is " << numErrors << "\n"; 
-}
+}*/
