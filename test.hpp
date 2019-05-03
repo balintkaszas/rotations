@@ -5,13 +5,76 @@
 #include <sstream>
 #include <string>
 #include "quaternion.hpp"
+#include "matrix.hpp"
 
-template<typename T>
- bool areEqual(const std::vector<T> &reference, const  quaternion<T> & q, const double precision = 1e-10) {
+template<typename F>
+ bool areEqual(const std::vector<double> &reference, const  F & q, const double precision = 1e-6) {
     
-    return (q.isValid() and std::equal (q.cbegin(), q.cend(), reference.cbegin(), [=](const auto x, const auto y){return std::abs(x - y) < precision;})) ;
+    return (std::equal (q.cbegin(), q.cend(), reference.cbegin(), [=](const auto x, const auto y){return std::abs(x - y) < precision;})) ;
 }  
 
+void TestMatrix(){
+    int numErrors = 0;
+    {
+		Matrix3<double> m({1., 2., 3., 4., 5., 6., 7., 8., 9.});
+		if(m[0] != 1. or m[1] != 2. or m[2] != 3. or m[3] != 4. or m[4] != 5. or m[5] != 6. or m[6] != 7. or m[7] != 8. or m[8] != 9.) {
+            numErrors++;
+            std::cout << "initializer list constructor failed (1d indexing) \n";
+        }
+		if(m(0, 0) != 1. or m(0, 1) != 2. or m(0, 2) != 3. or m(1, 0) != 4. or m(1, 1) != 5. or m(1, 2) != 6. or m(2, 0) != 7. or m(2, 1) != 8. or m(2, 2) != 9.) {
+            numErrors++;
+            std::cout << "initializer list constructor failed (2d indexing) \n";
+        }
+        auto itWrite = m.begin();
+        auto itRead = m.cbegin();
+        for(int j = 1; j < 9 ; ++j){
+            if(*itWrite != j or *itRead != j) {
+                numErrors++;
+                std::cout << "Iterator failed " << *itWrite << " " << j << "\n";
+            } 
+            std::advance(itWrite, 1);
+            std::advance(itRead, 1);
+        }
+    }
+    {
+        Matrix3<double> m({1., 2., 3., 4., 5., 6., 7., 8., 9.});
+        if(!areEqual({1., 2., 3., 4., 5., 6., 7., 8., 9.}, m) ){
+            numErrors ++;
+            std::cout << "std::equal failed \n";
+        }
+    }
+    {
+        Matrix3<double> m{1., 2., 3.,4,5., 6., 7., 8., 9.};
+        if(m.determinant() != 0){
+            numErrors ++;
+            std::cout << "determinant failed \n";
+        }
+    }
+    {
+        Matrix3<double> m{1., 2., 3.,4,5., 6., 7., 8., 9.};
+        if(m.isRotation()){
+            numErrors ++;
+            std::cout << "isRotation() failed \n";
+        }
+    }
+    {
+    // Test case: rotation around X axis by 30 degs.
+    /*1.0000000,  0.0000000,  0.0000000;
+    0.0000000,  0.1542515,  0.9880316;
+    0.0000000, -0.9880316,  0.1542515 */
+
+    // quaternion: [ x = 0.6502878, y = 0,  z = 0, w = -0.7596879 ]
+        Matrix3<double> m{1., 0., 0., 0. , 0.1542515 , 0.9880316, 0., -0.9880316, 0.1542515};
+        auto q = m.convertToQuaternion();
+        if(!areEqual({-0.7596879, 0.6502878, 0., 0.}, q )){
+            numErrors++;
+            std::cout << "quaternion conversion failed \n";
+            std::cout << "x: " << q.x() << " y: " << q.y() << " z: " << q.z() << " w: " << q.w() << " \n";
+            std::ostream_iterator<double > out_it (std::cout," ");
+            std::copy ( q.begin(), q.end(), out_it );
+        }
+    }
+}
  
 
 void TestFunction() {
@@ -19,7 +82,7 @@ void TestFunction() {
     //Default constructor
     {
         quaternion<int> q;
-        if( !q.isValid() ){
+        if( !q.isRotation() ){
             numErrors++;
             std::cout << "Default constructor failed \n";
         }
@@ -30,9 +93,6 @@ void TestFunction() {
         
     }
     // vector constructor
-    {
-
-    }
 
 }
 /*

@@ -46,24 +46,22 @@ class quaternion{
 	quaternion<T>& operator=(quaternion const&) = default;
 	quaternion<T>& conjugate();
 	quaternion<T>& inv();
-	bool isUnitary() const;
-	void normalize();
-	bool isValid() const {
-		return (static_cast<int>(data.size()) == 4);
+	bool isRotation() const {
+		return true;
 	}
 	//begin and end for compatibility with STL:
 	//get methods:
 	T x(){
-		return data[0];
-	}
-	T y(){
 		return data[1];
 	}
-	T z(){
+	T y(){
 		return data[2];
+	}
+	T z(){
+		return data[3];
 	} 
 	T w(){
-		return data[3];
+		return data[0];
 	}
 	//set methods:
 
