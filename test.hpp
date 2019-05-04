@@ -148,6 +148,26 @@ void TestFunction() {
         }
 
     }
+    //Rotate by quaternion:
+    {
+    // quaternion: [ x = 0.6502878, y = 0,  z = 0, w = -0.7596879 ]
+    // r = [0., 1., 0.]
+        quaternion<double> q{-0.7596879, 0.6502878, 0., 0.};
+        std::vector<double> r {0., 1., 0.};
+        std::optional<std::vector<double>> result = rotateByQuaternion(q, r); 
+        double s = std::sin(30);
+        double c = std::cos(30);
+        if(result){
+            if(!areEqual({0, c, s}, *result )){
+                numErrors++;
+                std::cout << "Wrong result in rotateByQuaternion \n";
+            }
+        }
+        else{
+            numErrors++;
+            std::cout << "std::optional error \n";
+        }
+    }    
 
     {
     // Test case: rotation around X axis by 30 degs.
