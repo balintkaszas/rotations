@@ -105,24 +105,6 @@ class quaternion{
 	}
 };
 
-template<typename T>
-quaternion<T> operator+( const quaternion<T> & a, const quaternion<T> & b){
-	quaternion<T> result ();
-	detail::transform_quaternion2(a, b, result, add);
-	return result;
-	}
-template<typename T>
-quaternion<T> operator-(const quaternion<T> & a, const quaternion<T> & b){
-	quaternion<T> result ();
-	detail::transform_quaternion2(a, b, result, sub);
-	return result;
-	}
-template<typename T>
-quaternion<T> operator-(const quaternion<T> & a){//Unitary negation
-	quaternion<T> result ();
-	detail::transform_quaternion1(a, result, [](T x){return -x;});
-	return result;
-} 
 //scalar
 template<typename T>
 quaternion<T> operator*( T s, const quaternion<T> & a){

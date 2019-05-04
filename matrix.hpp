@@ -119,7 +119,7 @@ class Matrix3{
 	}
 
 };
-
+//Rotating a vector: 
 template<typename T>
 std::optional<std::vector<T>> operator*(const Matrix3<T> &M, const std::vector<T> &v){
 	if(!M.isRotation()){
@@ -137,47 +137,20 @@ std::optional<std::vector<T>> operator*(const Matrix3<T> &M, const std::vector<T
 		return result;
 	}
 }
-/*
-template<typename T>
-quaternion<T> operator+( const quaternion<T> & a, const quaternion<T> & b){
-	quaternion<T> result ();
-	detail::transform_quaternion2(a, b, result, add);
-	return result;
-	}
-template<typename T>
-quaternion<T> operator-(const quaternion<T> & a, const quaternion<T> & b){
-	quaternion<T> result ();
-	detail::transform_quaternion2(a, b, result, sub);
-	return result;
-	}
-template<typename T>
-quaternion<T> operator-(const quaternion<T> & a){//Unitary negation
-	quaternion<T> result ();
-	detail::transform_quaternion1(a, result, [](T x){return -x;});
-	return result;
-} 
-//scalar
-template<typename T>
-quaternion<T> operator*( T s, const quaternion<T> & a){
-	quaternion<T> result ();
-	detail::transform_quaternion1(a, result, [s](T x){return s*x;});
-	return result;
-}
-template<typename T>
-quaternion<T> operator*( const quaternion<T> & a, T s){
-	quaternion<T> result ();
-	detail::transform_quaternion1(a, result, [s](T x){return x*s;});
-	return result;
-}
-template<typename T>
-quaternion<T> operator/( const quaternion<T> & a, T s){
-	quaternion<T> result ();
-	detail::transform_quaternion1(a, result, [s](T x){return x/s;});
-	return result;
-}
-template<typename T>
-quaternion<T> operator*(const quaternion<T> & a, const quaternion<T> & b);
 
+
+//Matrix multiplication
 template<typename T>
-quaternion<T> operator/(const quaternion<T> & a, const quaternion<T> & b);
- */
+Matrix3<T> operator*( Matrix3<T> const& m1, Matrix3<T> const& m2 ) { 
+    Matrix3<T> result;
+        for(int i=0;i<3;i++) {
+            for(int j=0;j<3;j++) {
+                T sum = 0.0;
+                for(int k=0;k<3;k++) {
+                    sum += m1(i,k)*m2(k,j);
+                }
+                result(i,j) = sum;
+        	}
+		}
+	return result;
+}
