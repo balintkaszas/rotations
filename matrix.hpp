@@ -8,6 +8,8 @@
 #include <iterator>
 #include <optional>
 #include "quaternion.hpp"
+#include "axisAngle.hpp"
+
 //Helper functions:
 namespace detail
 {
@@ -64,7 +66,7 @@ class Matrix3{
 		return det;
 	}
 	bool isRotation() const {
-		return (size() == 9 and static_cast<int>(determinant()) == 1);  //3x3 rotation matrix
+		return (size() == 9 and (std::abs(determinant() - 1.) < 1e-6));  //3x3 rotation matrix
 	}
 
 	//Conversion functions: 
@@ -82,7 +84,25 @@ class Matrix3{
 			return result;
 		}
 	}
+	//converting to axis-angle representation:
+	std::optional<axisAngle<T>> convertToAxisAngle() const {
+		if(!isRotation()) {
+			return std::nullopt; //Not a rotation matrix
+		}
+		else{
+			auto m = *this;
+			std::vector<T> axis {m(2,1) - m(1, 2), m(0, 2) - m(2, 0), m(1, 0) - m(0, 1)}; //the lenght of this is 2*sin(\alpha)
+			T s2 = std::sqrt(std::inner_product(axis.begin(), axis.end(), axis.begin(), 0.));
 
+			std::transform(axis.begin(), axis.end(), axis.begin(), [s2](T x){return x / s2;}); //Normed axis
+			T angle = std::asin(s2/2.);
+			axisAngle<T> result(axis, angle);
+			return result;
+		}
+	}
+
+
+	//STL compatibility
 	auto begin() {
 		return data.begin();
 	}

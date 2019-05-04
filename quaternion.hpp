@@ -122,7 +122,7 @@ class quaternion{
 	}
 	
 	bool isRotation() const {
-		return (std::abs(norm() - 1.) < 1e-7);
+		return (std::abs(norm() - 1.) < 1e-6);
 	}
 };
 

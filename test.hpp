@@ -115,13 +115,16 @@ void TestMatrix(){
 
     // quaternion: [ x = 0.6502878, y = 0,  z = 0, w = -0.7596879 ]
         Matrix3<double> m{1., 0., 0., 0. , 0.1542515 , 0.9880316, 0., -0.9880316, 0.1542515};
-        auto q = *m.convertToQuaternion();
-        if(!areEqual({-0.7596879, 0.6502878, 0., 0.}, q )){
-            numErrors++;
-            std::cout << "matrix -> quaternion conversion failed \n";
-            std::cout << "x: " << q.x() << " y: " << q.y() << " z: " << q.z() << " w: " << q.w() << " \n";
-            std::ostream_iterator<double > out_it (std::cout," ");
-            std::copy ( q.begin(), q.end(), out_it );
+        auto q = m.convertToQuaternion();
+        if(q){
+            auto val = q.value();
+            if(!areEqual({-0.7596879, 0.6502878, 0., 0.}, val )){
+                numErrors++;
+                std::cout << "matrix -> quaternion conversion failed \n";
+                std::cout << "x: " << val.x() << " y: " << val.y() << " z: " << val.z() << " w: " << val.w() << " \n";
+                std::ostream_iterator<double > out_it (std::cout," ");
+                std::copy ( val.begin(), val.end(), out_it );
+            }
         }
     }
     //Test the rotation operator: M*v. Same matrix as above
@@ -129,11 +132,14 @@ void TestMatrix(){
         Matrix3<double> m{1., 0., 0., 0. , 0.1542515 , 0.9880316, 0., -0.9880316, 0.1542515};
         std::vector<double> vec{0., 1., 0.}; //v || y, expected : (0, cos(30), sin(30))
         std::optional<std::vector<double>> result = m*vec;
-        double s = std::sin(30);
-        double c = std::cos(30); 
-        if(result and !areEqual({0, c, s}, *result )){
-            numErrors++;
-            std::cout << "matrix rotation failed: expected components are: \n" << " 0 ,"  << c << ", " << s <<" \n";
+        if(result){
+            auto value = result.value();
+            double s = std::sin(30);
+            double c = std::cos(30); 
+            if(result and !areEqual({0, c, s}, value )){
+                numErrors++;
+                std::cout << "matrix rotation failed: expected components are: \n" << " 0 ,"  << c << ", " << s <<" \n";
+            }
         }
     }
     //Test matrix multiplication
@@ -144,6 +150,20 @@ void TestMatrix(){
         if(!areEqual({13. , 17. ,  22.4, 34.,  47.,  56., 55.,  77., 89.6}, c)){
             numErrors++;
             std::cout << "Matrix multiplication  operator failed \n";   
+        }
+    }
+    //Test matrix -> axis-angle conversion:
+    {
+        Matrix3<double> m{1., 0., 0., 0. , 0.1542515 , 0.9880316, 0., -0.9880316, 0.1542515};
+        std::optional<axisAngle<double>> res = m.convertToAxisAngle();
+        if(res){
+            auto a = res.value();
+            if(a.getAngle() != 30 and a.x() != 1. and a.y() != 0 and a.z() != 0){
+                numErrors++;
+                std::cout << "matrix -> axis-angle conversion failed.\n";
+            }
+        }else{
+            std::cout << "No result \n";
         }
     }
 }
@@ -271,4 +291,5 @@ void TestQuaternion() {
             std::cout << "No result \n";
         }
     }
+
 }

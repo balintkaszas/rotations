@@ -7,7 +7,7 @@
 #include "quaternion.hpp"
 #include "matrix.hpp"
 #include "test.hpp"
-
+#include <iomanip>
 
 void TestCompatibility(){
     int numErrors = 0;
@@ -32,20 +32,22 @@ void TestCompatibility(){
         std::optional<std::vector<double>> one = m1*v;
         std::optional<std::vector<double>> result1 = m2*(one.value());
         std::optional<std::vector<double>> result2 = mComposite*v;
-        if(!areEqual(*result1, *result2)){
+        if(!areEqual(result1.value(), result2.value())){
             numErrors++;
             std::cout << "Matrix composition failed. \n";
         }
+
     //rotation by 35 degrees:
     /*[  1.0000000,  0.0000000,  0.0000000;
         0.0000000, -0.9036922,  0.4281827;
         0.0000000, -0.4281827, -0.9036922 ]*/
         Matrix3<double> m{1., 0., 0., 0. , -0.9036922 , 0.4281827, 0., -0.4281827, -0.9036922};
         std::optional<std::vector<double>> two = m*v;
-        if(!areEqual(*two, *result2)){
+        if(!areEqual(two.value(), result2.value())){
             numErrors++;
             std::cout << "Matrix composition (35degs) failed. \n";
         }
+
         //Same with the quaternion: 
         quaternion<double> q { 0.21944, -0.975626, 0., 0.};
         std::optional<std::vector<double>> three  = rotateByQuaternion(q, v);
