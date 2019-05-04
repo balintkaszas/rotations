@@ -68,7 +68,7 @@ void TestMatrix(){
         auto q = m.convertToQuaternion();
         if(!areEqual({-0.7596879, 0.6502878, 0., 0.}, q )){
             numErrors++;
-            std::cout << "quaternion conversion failed \n";
+            std::cout << "matrix -> quaternion conversion failed \n";
             std::cout << "x: " << q.x() << " y: " << q.y() << " z: " << q.z() << " w: " << q.w() << " \n";
             std::ostream_iterator<double > out_it (std::cout," ");
             std::copy ( q.begin(), q.end(), out_it );
@@ -92,7 +92,23 @@ void TestFunction() {
         }
         
     }
-    // vector constructor
+    {
+    // Test case: rotation around X axis by 30 degs.
+    /*1.0000000,  0.0000000,  0.0000000;
+    0.0000000,  0.1542515,  0.9880316;
+    0.0000000, -0.9880316,  0.1542515 */
+
+    // quaternion: [ x = 0.6502878, y = 0,  z = 0, w = -0.7596879 ]
+        quaternion<double> q{-0.7596879, 0.6502878, 0., 0.};
+        auto m = q.convertToMatrix();
+
+        if(!areEqual({1., 0., 0., 0. , 0.1542515 , 0.9880316, 0., -0.9880316, 0.1542515}, m )){
+            numErrors++;
+            std::cout << "quaternion -> matrix conversion failed \n";
+            std::ostream_iterator<double > out_it (std::cout," ");
+            std::copy ( m.begin(), m.end(), out_it );
+        }
+    }
 
 }
 /*

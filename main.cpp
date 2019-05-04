@@ -1,9 +1,9 @@
 
 #include <iostream>
+#include "matrix.hpp"
 #include "quaternion.hpp"
 #include <cmath>
 #include "test.hpp"
-#include "matrix.hpp"
 
 
 int main() {
