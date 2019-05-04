@@ -5,7 +5,6 @@
 #include <numeric>
 #include <initializer_list>
 #include <cmath>
-#include <iterator>
 #include <optional>
 #include "quaternion.hpp"
 #include "axisAngle.hpp"

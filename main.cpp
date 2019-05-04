@@ -6,6 +6,7 @@
 #include <cmath>
 #include "test.hpp"
 #include <string>
+#include <fstream>
 #include "testCompatibility.hpp"
 #include <optional>
 

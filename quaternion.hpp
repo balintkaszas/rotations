@@ -5,9 +5,6 @@
 #include <numeric>
 #include <initializer_list>
 #include <cmath>
-#include <ostream>
-#include <fstream>
-#include <iterator>
 #include "matrix.hpp"
 #include "axisAngle.hpp"
 //Helper functions:

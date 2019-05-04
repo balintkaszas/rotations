@@ -2,11 +2,10 @@
 #pragma once
 #include <iostream>
 #include <cmath>
-#include <sstream>
-#include <string>
 #include "quaternion.hpp"
 #include "matrix.hpp"
 #include "axisAngle.hpp"
+#include <iterator>
 
 template<typename F>
  bool areEqual(const std::vector<double> &reference, const  F & q, const double precision = 1e-6) {
