@@ -74,6 +74,20 @@ void TestMatrix(){
             std::copy ( q.begin(), q.end(), out_it );
         }
     }
+    //Test the rotation operator: M*v. Same matrix as above
+    {
+        Matrix3<double> m{1., 0., 0., 0. , 0.1542515 , 0.9880316, 0., -0.9880316, 0.1542515};
+        std::vector<double> vec{0., 1., 0.}; //v || y, expected : (0, cos(30), sin(30))
+        std::vector<double> result = m*vec;
+        double s = std::sin(30);
+        double c = std::cos(30); 
+        if(!areEqual({0, c, s}, result )){
+            numErrors++;
+            std::cout << "matrix rotation failed: expected components are: \n" << " 0 ,"  << c << ", " << s <<" \n";
+            std::ostream_iterator<double > out_it (std::cout," ");
+            std::copy ( result.begin(), result.end(), out_it );
+        }
+    }
 }
  
 

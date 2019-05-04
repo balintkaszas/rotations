@@ -29,7 +29,7 @@ inline auto add = [](auto const& x, auto const& y){ return x + y; };
 inline auto sub = [](auto const& x, auto const& y){ return x - y; };
 inline auto sq = [](auto const& x){ return x * x  ; };
 
-template<typename T>
+template<typename T> //forward declaration
 class Matrix3;
 
 template<typename T>
@@ -85,9 +85,9 @@ class quaternion{
 	
 	Matrix3<T> convertToMatrix() const {
 		auto q = *this;
-		T a11 = -1. + 2*sq(q.x()) + 2*sq(q.w()); T a12 = 2*(q.x()*q.y() - q.z()*q.w()); 	  T a13 = 2*(q.x()*q.z() + q.y()*q.w());
-		T a21 = 2*(q.x()*q.y() + q.z()*q.w());       T a22 = -1. + 2*sq(q.y()) + 2*sq(q.w()); T a23 = 2*(q.y()*q.z() - q.x()*q.w()); 
-		T a31 = 2*(q.x()*q.z() - q.y()*q.w());       T a32 = 2*(q.x()*q.w() + q.y()*q.z());       T a33 = -1. + 2*sq(q.z()) + 2*sq(q.w());
+		T a11 = -1. + 2*sq(q.x()) + 2*sq(q.w()); T a12 = 2*(q.x()*q.y() - q.z()*q.w());   T a13 = 2*(q.x()*q.z() + q.y()*q.w());
+		T a21 = 2*(q.x()*q.y() + q.z()*q.w());   T a22 = -1. + 2*sq(q.y()) + 2*sq(q.w()); T a23 = 2*(q.y()*q.z() - q.x()*q.w()); 
+		T a31 = 2*(q.x()*q.z() - q.y()*q.w());   T a32 = 2*(q.x()*q.w() + q.y()*q.z());   T a33 = -1. + 2*sq(q.z()) + 2*sq(q.w());
 		return {a11, a12, a13, a21, a22, a23, a31, a32, a33};
 	}
 

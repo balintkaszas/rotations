@@ -119,6 +119,19 @@ class Matrix3{
 	}
 
 };
+
+template<typename T>
+std::vector<T> operator*(const Matrix3<T> &M, const std::vector<T> &v){
+	std::vector<T> result(3);
+	for(int i = 0; i < 3; ++i){
+		T sum = 0.0;
+		for(int j = 0; j < 3; ++j){
+			sum += M(i,j)*v[j];
+		}
+		result[i] = sum;
+	}
+	return result;
+}
 /*
 template<typename T>
 quaternion<T> operator+( const quaternion<T> & a, const quaternion<T> & b){
