@@ -131,6 +131,23 @@ void TestFunction() {
             std::cout << "rotation representation failed \n";
         }
     }
+    //quaternion multiply:
+
+    {
+        //a  = 1 0 1 0
+        //b = 1 0.5 0.5 0.75
+        //ab =  0.5000    1.2500    1.5000    0.2500
+        quaternion<double> a {1., 0., 1., 0.};
+        quaternion<double> b {1., 0.5, 0.5, 0.75};
+        quaternion<double> res = a*b;
+        if(!areEqual({0.5, 1.25, 1.5, 0.25}, res)){
+            numErrors++;
+            std::cout << "Quaternion multiplication failed \n";
+            std::ostream_iterator<double > out_it (std::cout," ");
+            std::copy ( res.begin(), res.end(), out_it );
+        }
+
+    }
 
     {
     // Test case: rotation around X axis by 30 degs.
