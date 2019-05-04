@@ -82,6 +82,15 @@ class axisAngle{
 			return result;
 		}
 	}
-
-
 };
+
+template<typename T>
+std::optional<std::vector<T>> rotateByAngle(const axisAngle<T> &a, const std::vector<T> &r) {
+	std::optional<quaternion<T>> proxy = a.convertToQuaternion();
+	if(!proxy){//if conversion failed
+		return std::nullopt;
+	} 
+	else {
+		return rotateByQuaternion(proxy, r);
+	}
+}

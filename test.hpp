@@ -256,5 +256,19 @@ void TestQuaternion() {
             std::copy ( m.begin(), m.end(), out_it );
         }
     }
-
+    //Testing quaternion to axis-angle conversion:
+    {
+        quaternion<double> q{-0.7596879, 0.6502878, 0., 0.};
+        std::optional<axisAngle<double>> res = q.convertToAxisAngle();
+        if(res){
+            auto a = res.value();
+            if(a.getAngle() != 30 and a.x() != 1. and a.y() != 0 and a.z() != 0){
+                numErrors++;
+                std::cout << "quaternion -> axis-angle conversion failed.\n";
+            }
+        }
+        else{
+            std::cout << "No result \n";
+        }
+    }
 }

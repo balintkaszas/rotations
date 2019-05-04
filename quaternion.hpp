@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iterator>
 #include "matrix.hpp"
+#include "axisAngle.hpp"
 //Helper functions:
 namespace detail
 {
@@ -83,7 +84,8 @@ class quaternion{
 	auto cend() const {
 		return data.cend();
 	}
-	
+	//Conversion functions: (matrix, axis-angle)
+	//Matrix conversion is always valid, but the result is not necessarily a rotation matrix
 	Matrix3<T> convertToMatrix() const {
 		T a11 = -1. + 2*sq(x()) + 2*sq(w()); T a12 = 2*(x()*y() - z()*w());       T a13 = 2*(x()*z() + y()*w());
 		T a21 = 2*(x()*y() + z()*w());       T a22 = -1. + 2*sq(y()) + 2*sq(w()); T a23 = 2*(y()*z() - x()*w()); 
@@ -91,7 +93,26 @@ class quaternion{
 		return {a11, a12, a13, a21, a22, a23, a31, a32, a33};
 	}
 
-
+	//conversion to axis-angle representation is only valid when the quaternion is unitary
+	//for numerical stability, atan2 function is used
+	std::optional<axisAngle<T>> convertToAxisAngle() const {
+		if(!isRotation()){
+			return std::nullopt;
+		}
+		else{
+			std::vector<T> axis;
+			T alpha = 2*std::atan2(1, w());
+			if(alpha == 0){
+				axis = {0., 0., 0.};
+			}else{
+				T s = std::sin(alpha/2.);
+				axis = {x()/s, y()/s, z()/s};
+			}
+			axisAngle<T> result {axis, alpha};
+			return result;
+		}
+	}
+	
 	quaternion<T> inv() const {
 		return {w(), -x(), -y(), -z()};
 	}
