@@ -126,7 +126,7 @@ class quaternion{
 	}
 };
 
-//scalar
+//scalar multiply, to normalize quaternion
 template<typename T>
 quaternion<T> operator*( T s, const quaternion<T> & a){
 	quaternion<T> result ();

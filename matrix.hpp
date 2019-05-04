@@ -10,20 +10,7 @@
 #include "quaternion.hpp"
 #include "axisAngle.hpp"
 
-//Helper functions:
-namespace detail
-{
-	template<typename V1, typename V2, typename F>
-	void transform_matrix1(V1 const& v1, V2& v2, F f)
-	{
-		std::transform(v1.cbegin(), v1.cend(), v2.begin(), f);
-	}
-	template<typename V1, typename V2, typename F>
-	void transform_matrix2(V1 const& v1, V2& v2, F f)
-	{
-		std::transform(v1.cbegin(), v1.cend(), v2.begin(), f);
-	}
-}
+
 
 template<typename T>
 class Matrix3{
