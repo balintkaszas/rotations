@@ -2,7 +2,7 @@
 C++ library to represent 3d rotations
 
 Example at:
-https://github.com/balintkaszas/rotations/blob/master/doc.ipynb
+http://nbviewer.jupyter.org/github/balintkaszas/rotations/blob/master/doc.ipynb
 
 # Library to represent 3D rotations
 
