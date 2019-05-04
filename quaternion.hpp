@@ -47,11 +47,7 @@ class quaternion{
 
 	
 	quaternion<T>& operator=(quaternion const&) = default;
-	quaternion<T>& conjugate();
-	quaternion<T>& inv();
-	bool isRotation() const {
-		return true;
-	}
+
 	//begin and end for compatibility with STL:
 	//get methods:
 	T x(){
@@ -66,7 +62,10 @@ class quaternion{
 	T w(){
 		return data[0];
 	}
-	//set methods:
+	// Get vector part 
+	std::vector<T> vectorPart(){
+		return {*this.x(), *this.y(), *this.z()};
+	}
 
 	auto begin() {
 		return data.begin();
@@ -90,7 +89,30 @@ class quaternion{
 		T a31 = 2*(q.x()*q.z() - q.y()*q.w());   T a32 = 2*(q.x()*q.w() + q.y()*q.z());   T a33 = -1. + 2*sq(q.z()) + 2*sq(q.w());
 		return {a11, a12, a13, a21, a22, a23, a31, a32, a33};
 	}
+	//Right multiply by quaternion
+	quaternion<T> operator*(const quaternion<T> & b){
+		auto a = *this;
+		T tw = a.w()*b.w() - a.x()*b.x() - a.y()*b.y() - a.z()*b.z();
+		T tx = a.w()*b.x() + a.x()*b.w() - a.y()*b.z() + a.z()*b.y();
+		T ty = a.w()*b.y() + a.x()*b.z() + a.y()*b.w() - a.z()*b.x();
+		T tz = a.x()*b.z() - a.x()*b.y() + a.y()*b.x() + a.z()*b.w();
+		return {tw, tx, ty, tz};
+	}
 
+	quaternion<T> inv() const {
+		return {this->w(), -this->x(), -this->y(), -this->z()};
+	}
+
+	double norm() const { 
+		auto q = *this;
+		return std::sqrt(sq(q.w()) + sq(q.x()) + sq(q.y()) + sq(q.z()));
+	}
+	
+	bool isRotation() const {
+		return std::abs(this->norm() - 1.) < 1e-15;
+	}
+	//Rotation by a quaternion: 
+	std::optional<std::vector<T>> operator()(const std::vector<T> & );
 };
 
 template<typename T>
@@ -130,8 +152,4 @@ quaternion<T> operator/( const quaternion<T> & a, T s){
 	detail::transform_quaternion1(a, result, [s](T x){return x/s;});
 	return result;
 }
-template<typename T>
-quaternion<T> operator*(const quaternion<T> & a, const quaternion<T> & b);
 
-template<typename T>
-quaternion<T> operator/(const quaternion<T> & a, const quaternion<T> & b);

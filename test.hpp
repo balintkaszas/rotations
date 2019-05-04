@@ -96,16 +96,42 @@ void TestFunction() {
     //Default constructor
     {
         quaternion<int> q;
-        if( !q.isRotation() ){
+        if( q.x() != 0 or q.y() != 0 or q.z() != 0 or q.w() != 0 ){
             numErrors++;
             std::cout << "Default constructor failed \n";
         }
-        if( q.x() != 0 or q.y() != 0 or q.z() != 0 or q.w() != 0 ){
-            numErrors++;
-            std::cout << "Default constructor failed2 \n";
-        }
         
     }
+    {
+        quaternion<int> q;
+        if(q.norm() != 0){
+            numErrors++;
+            std::cout << "default norm failed \n";    
+        }
+    }
+
+    {
+        quaternion<int> q{1, 2, 3, 4}; // sqrt(1 + 4 + 9 + 16)
+        if(q.norm() != std::sqrt(30)){
+            numErrors++;
+            std::cout << q.norm() << " vs " << std::sqrt(30) << " norm failed \n";    
+        }
+    }
+
+    {   //Rotation by 30 degs around x axis: (1, 0, 0)
+        double c = std::cos(15.);
+        double s = std::sin(15.);
+        quaternion<double> q{c, s, 0, 0}; 
+        if(!q.isRotation()){
+            numErrors++;
+            std::cout << "isRotation failed \n";    
+        }
+        if(!areEqual({-0.7596879, 0.6502878, 0., 0.}, q)){
+            numErrors++;
+            std::cout << "rotation representation failed \n";
+        }
+    }
+
     {
     // Test case: rotation around X axis by 30 degs.
     /*1.0000000,  0.0000000,  0.0000000;
@@ -122,6 +148,10 @@ void TestFunction() {
             std::ostream_iterator<double > out_it (std::cout," ");
             std::copy ( m.begin(), m.end(), out_it );
         }
+    }
+    // quaternion multiplication:
+    {
+
     }
 
 }
