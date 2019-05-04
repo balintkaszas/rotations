@@ -67,27 +67,7 @@ class Matrix3{
 		return (size() == 9 and static_cast<int>(determinant()) == 1);  //3x3 rotation matrix
 	}
 
-	std::optional<Matrix3<T>> & invert() const { 
-		if(static_cast<int>(determinant()) == 0){
-			return std::optional<Matrix3<T>>{};
-		}
-		else {
-			auto m = *this;
-			double invdet = 1 / determinant();
-			Matrix3<T> minv; // inverse of matrix m
-			minv(0, 0) = (m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2)) * invdet;
-			minv(0, 1) = (m(0, 2) * m(2, 1) - m(0, 1) * m(2, 2)) * invdet;
-			minv(0, 2) = (m(0, 1) * m(1, 2) - m(0, 2) * m(1, 1)) * invdet;
-			minv(1, 0) = (m(1, 2) * m(2, 0) - m(1, 0) * m(2, 2)) * invdet;
-			minv(1, 1) = (m(0, 0) * m(2, 2) - m(0, 2) * m(2, 0)) * invdet;
-			minv(1, 2) = (m(1, 0) * m(0, 2) - m(0, 0) * m(1, 2)) * invdet;
-			minv(2, 0) = (m(1, 0) * m(2, 1) - m(2, 0) * m(1, 1)) * invdet;
-			minv(2, 1) = (m(2, 0) * m(0, 1) - m(0, 0) * m(2, 1)) * invdet;
-			minv(2, 2) = (m(0, 0) * m(1, 1) - m(1, 0) * m(0, 1)) * invdet;
-			return std::optional<Matrix3<T>>{minv};
-		}
-	}
-
+	//Conversion functions: 
 	std::optional<quaternion<T>> convertToQuaternion() const {
 		if(isRotation()) {
 			return std::nullopt; //Not a rotation matrix

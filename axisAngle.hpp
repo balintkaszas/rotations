@@ -47,7 +47,7 @@ class axisAngle{
 	T getAngle() const {
 		return angle;
 	}
-
+	
 	bool isRotation() const {
 		return (std::inner_product(axis.begin(), axis.end(), axis.begin(), 0.)!=0 and getAngle() != 0);  // if axis, angle is not zero.
 	}
@@ -84,6 +84,8 @@ class axisAngle{
 	}
 };
 
+
+//Not an implementation of the Rodriguez formula, simply convert to quaternion. 
 template<typename T>
 std::optional<std::vector<T>> rotateByAngle(const axisAngle<T> &a, const std::vector<T> &r) {
 	std::optional<quaternion<T>> proxy = a.convertToQuaternion();
