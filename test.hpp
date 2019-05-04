@@ -47,6 +47,20 @@ void TestAxisAngle(){
             std::cout << "axis-angle -> matrix conversion failed \n";
         }
     }
+    {   //conversion to quaternion:
+        axisAngle<double> a({1., 0., 0.}, 30.); 
+
+        std::optional<quaternion<double>> converted = a.convertToQuaternion(); //because of std::optional
+
+        if(!converted){
+            std::cout << "No result";
+        }
+        if(!areEqual({-0.7596879, 0.6502878, 0., 0.}, *converted) ){
+            numErrors ++;
+            std::cout << "axis-angle -> quaternion conversion failed \n";
+        }
+    }
+
 }
 
 void TestMatrix(){

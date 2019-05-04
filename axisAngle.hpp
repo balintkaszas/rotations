@@ -78,7 +78,8 @@ class axisAngle{
 		else{
 			T c = std::cos(getAngle()/2.);
 			T s = std::sin(getAngle()/2.);
-			return {c, x()*s, y()*s, z()*s};
+			quaternion<double> result  {c, x()*s, y()*s, z()*s}; 
+			return result;
 		}
 	}
 
