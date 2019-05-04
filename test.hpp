@@ -65,7 +65,7 @@ void TestMatrix(){
 
     // quaternion: [ x = 0.6502878, y = 0,  z = 0, w = -0.7596879 ]
         Matrix3<double> m{1., 0., 0., 0. , 0.1542515 , 0.9880316, 0., -0.9880316, 0.1542515};
-        auto q = m.convertToQuaternion();
+        auto q = *m.convertToQuaternion();
         if(!areEqual({-0.7596879, 0.6502878, 0., 0.}, q )){
             numErrors++;
             std::cout << "matrix -> quaternion conversion failed \n";
@@ -78,14 +78,12 @@ void TestMatrix(){
     {
         Matrix3<double> m{1., 0., 0., 0. , 0.1542515 , 0.9880316, 0., -0.9880316, 0.1542515};
         std::vector<double> vec{0., 1., 0.}; //v || y, expected : (0, cos(30), sin(30))
-        std::vector<double> result = m*vec;
+        std::optional<std::vector<double>> result = m*vec;
         double s = std::sin(30);
         double c = std::cos(30); 
-        if(!areEqual({0, c, s}, result )){
+        if(result and !areEqual({0, c, s}, *result )){
             numErrors++;
             std::cout << "matrix rotation failed: expected components are: \n" << " 0 ,"  << c << ", " << s <<" \n";
-            std::ostream_iterator<double > out_it (std::cout," ");
-            std::copy ( result.begin(), result.end(), out_it );
         }
     }
 }
@@ -167,7 +165,19 @@ void TestFunction() {
             numErrors++;
             std::cout << "std::optional error \n";
         }
-    }    
+    }   
+    //Testing optional 
+    {
+    // quaternion: [ x = 99, y = 123,  z =110, w = -0.7596879 ]
+    // r = [0., 1., 0.]
+        quaternion<double> q{-0.7596879, 99., 123., 110.};
+        std::vector<double> r {0., 1., 0.};
+        std::optional<std::vector<double>> result = rotateByQuaternion(q, r); 
+        if(result){
+            numErrors++;
+            std::cout << "Std::optional error \n";
+        }
+    } 
 
     {
     // Test case: rotation around X axis by 30 degs.

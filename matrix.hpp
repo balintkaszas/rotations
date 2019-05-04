@@ -88,11 +88,11 @@ class Matrix3{
 		}
 	}
 
-	quaternion<T> convertToQuaternion() const {
-		/*if(isRotation()) {
-			return std::optional<quaternion<T>>{}; //Not a rotation matrix
-		}*/
-		//else{
+	std::optional<quaternion<T>> convertToQuaternion() const {
+		if(isRotation()) {
+			return std::nullopt; //Not a rotation matrix
+		}
+		else{
 			auto m = *this;
 			T x = 0.5 * std::sqrt(1 + m(0, 0) - m(1, 1) - m(2, 2));
 			T y = (m(0, 1) + m(1, 0)) / (4 * x);
@@ -100,7 +100,7 @@ class Matrix3{
 			T w = (m(2, 1) - m(1, 2)) / (4 * x);
 			quaternion<T> result {w, x, y, z};
 			return result;
-		//}
+		}
 	}
 
 	auto begin() {
@@ -121,16 +121,21 @@ class Matrix3{
 };
 
 template<typename T>
-std::vector<T> operator*(const Matrix3<T> &M, const std::vector<T> &v){
-	std::vector<T> result(3);
-	for(int i = 0; i < 3; ++i){
-		T sum = 0.0;
-		for(int j = 0; j < 3; ++j){
-			sum += M(i,j)*v[j];
-		}
-		result[i] = sum;
+std::optional<std::vector<T>> operator*(const Matrix3<T> &M, const std::vector<T> &v){
+	if(!M.isRotation()){
+		return std::nullopt;
 	}
-	return result;
+	else{
+		std::vector<T> result(3);
+		for(int i = 0; i < 3; ++i){
+			T sum = 0.0;
+			for(int j = 0; j < 3; ++j){
+				sum += M(i,j)*v[j];
+			}
+			result[i] = sum;
+		}
+		return result;
+	}
 }
 /*
 template<typename T>
