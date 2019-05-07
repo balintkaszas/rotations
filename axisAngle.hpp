@@ -16,16 +16,16 @@ class quaternion;
 template<typename T>
 class axisAngle{
 	private: 
-	std::vector<T> axis; // axis coordinates
+	std::array<T,3> axis; // axis coordinates
 	T angle;
 	public:
-	axisAngle(): axis(3), angle{0}{} //default const 
+	axisAngle(): axis{}, angle{0}{} //default const 
     /**
 	*  Constructor
     */
-	axisAngle(std::vector<T> vec, T a): axis{vec}, angle{a} {}; //init.  from vector + angle 
-	axisAngle(T _v1, T _v2, T _v3, T _v4): axis{{_v1, _v2, _v3}}, angle{_v4} {}; //init.  from 4 numbers
-	axisAngle(std::initializer_list<T> const& il, T a):   axis{il}, angle{a} {}; //init from init list + number
+	axisAngle(std::array<T,3> vec, T a): axis{vec}, angle(a) {}; //init.  from vector + angle 
+	axisAngle(T _v1, T _v2, T _v3, T _v4): axis{{_v1, _v2, _v3}}, angle(_v4) {}; //init.  from 4 numbers
+	//axisAngle(std::initializer_list<T> const& il, T a):   axis{il}, angle(a) {}; //init from init list + number
 	
 	axisAngle( axisAngle const& ) = default; //copy const       
 
@@ -63,7 +63,7 @@ class axisAngle{
 			T a11 = x()*x()*C + c; T a12 = x()*y()*C - z()*s; T a13 = x()*z()*C + y()*s;
 			T a21 = y()*x()*C + z()*s; T a22 = y()*y()*C + c; T a23 = y()*z()*C - x()*s;
 			T a31 = z()*x()*C - y()*s; T a32 = z()*y()*C + x()*s; T a33 = z()*z()*C + c;
-			Matrix3<T> result{a11, a12, a13, a21, a22, a23, a31, a32, a33}; 
+			Matrix3<T> result({a11, a12, a13, a21, a22, a23, a31, a32, a33}); 
 			return result;
 		}
 	}
@@ -84,7 +84,7 @@ class axisAngle{
 
 //Not an implementation of the Rodriguez formula, simply convert to quaternion. 
 template<typename T>
-std::optional<std::vector<T>> rotateByAngle(const axisAngle<T> &a, const std::vector<T> &r) {
+std::optional<std::array<T,3>> rotateByAngle(const axisAngle<T> &a, const std::array<T,3> &r) {
 	std::optional<quaternion<T>> proxy = a.convertToQuaternion();
 	if(!proxy){//if conversion failed
 		return std::nullopt;

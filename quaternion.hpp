@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <array>
 #include <algorithm>
 #include <iostream>
 #include <numeric>
@@ -33,16 +33,16 @@ class Matrix3;
 template<typename T>
 class quaternion{
 	private: 
-	std::vector<T> data;
+	std::array<T,4> data;
 	public:
 	quaternion(): data{{static_cast<T>(0.), static_cast<T>(0.), static_cast<T>(0.), static_cast<T>(0.)}} {} //default const 
     /**
 	*  Constructor
     */
-	quaternion(std::vector<T> vec): data{vec}{} //init. list from vector 
+	quaternion(std::array<T,3> arr): data{arr}{} //init. list from vector 
 	quaternion(T _s, T _v1, T _v2, T _v3): data{{_s, _v1, _v2, _v3}}{} //init. list from 4 numbers
 
-	quaternion(T _s, std::vector<T> _v): data{{_s, _v[0], _v[1], _v[2]}}{} //init. list from scalar + vector
+	quaternion(T _s, std::array<T,3> _v): data{{_s, _v[0], _v[1], _v[2]}}{} //init. list from scalar + vector
 	quaternion( quaternion const& ) = default; //copy const       
 
 	
@@ -63,7 +63,7 @@ class quaternion{
 		return data[0];
 	}
 	// Get vector part 
-	std::vector<T> vectorPart() const{
+	std::array<T,3> vectorPart() const{
 		return {x(), y(), z()};
 	}
 
@@ -87,7 +87,8 @@ class quaternion{
 		T a11 = -1. + 2*sq(x()) + 2*sq(w()); T a12 = 2*(x()*y() - z()*w());       T a13 = 2*(x()*z() + y()*w());
 		T a21 = 2*(x()*y() + z()*w());       T a22 = -1. + 2*sq(y()) + 2*sq(w()); T a23 = 2*(y()*z() - x()*w()); 
 		T a31 = 2*(x()*z() - y()*w());       T a32 = 2*(x()*w() + y()*z());       T a33 = -1. + 2*sq(z()) + 2*sq(w());
-		return {a11, a12, a13, a21, a22, a23, a31, a32, a33};
+		Matrix3<T> result({a11, a12, a13, a21, a22, a23, a31, a32, a33});
+		return result;
 	}
 
 	//conversion to axis-angle representation is only valid when the quaternion is unitary
@@ -97,7 +98,7 @@ class quaternion{
 			return std::nullopt;
 		}
 		else{
-			std::vector<T> axis;
+			std::array<T,3> axis;
 			T alpha = 2*std::atan2(1, w());
 			if(alpha == 0){
 				axis = {0., 0., 0.};
@@ -152,7 +153,7 @@ quaternion<T> operator*(const quaternion<T> & a, const quaternion<T> & b){
 }
 
 template<typename T>
-std::optional<std::vector<T>> rotateByQuaternion(const quaternion<T> &q, const std::vector<T> &r) {
+std::optional<std::array<T,3>> rotateByQuaternion(const quaternion<T> &q, const std::array<T,3> &r) {
 	if(!q.isRotation()){
 		return std::nullopt;
 	}

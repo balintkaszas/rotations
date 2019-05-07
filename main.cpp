@@ -10,7 +10,7 @@
 #include "testCompatibility.hpp"
 #include <optional>
 
-typedef std::vector<double> point;
+typedef std::array<double,3> point;
 class Points{
     private: 
     std::vector<point> data;
